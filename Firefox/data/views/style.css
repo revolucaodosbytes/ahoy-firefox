@@ -1,0 +1,141 @@
+body {
+	font-family: Arial;
+	text-align: center;
+	width: 300px;
+	min-height: 325px;
+	background: url("../img/cravo_curto.png") no-repeat;
+	background-position: right bottom;
+	background-size: 100px;
+	margin: 0px;
+    overflow: hidden;
+}
+
+
+header {
+    background: #219d55;
+    color: white;
+	padding: 10px;
+    width: 100%;
+}
+
+header h1 {
+	margin: 0;
+	padding 0;
+}
+
+h1 {
+	font-size: 20px;
+	text-align: center;
+	margin: 10px;
+}
+
+.info {
+	margin: 15px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 15px;
+}
+
+.info .status {
+	font-size: 12px;
+    text-transform: lowercase;
+    margin-top: 10px;
+}
+
+.activo {
+	color: darkgreen;
+}
+
+.inactivo {
+	color: darkred;
+}
+
+.buttons button {
+	-moz-outline:0 none;
+	outline:0 none;
+	display: block;
+    margin: 5px auto;
+}
+
+.buttons button {
+  position: relative;
+  vertical-align: top;
+  width: 200px;
+  height: 30px;
+  padding: 0;
+  font-size: 15px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #27ae60;
+  border: 0;
+  border-bottom: 2px solid #219d55;
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -2px #219d55;
+  box-shadow: inset 0 -2px #219d55;
+}
+
+.buttons button:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.waiting { display: none; margin: 10px; }
+.waiting img { width: 20px; height: 20px; }
+
+.links {
+	text-align: center;
+}
+
+.links a {
+	text-decoration: none;
+	display:block;
+	margin-bottom: 10px;
+}
+
+a:visited {
+	color: blue;
+}
+
+footer {
+	position: absolute;
+    bottom: 5px;
+    color: gray;
+    width: 100%;
+    font-size: 10px;
+    text-align: center;
+}
+
+footer a {
+	text-decoration: none;
+	color: gray !important;
+    font-weight: bold;
+}
+
+/**
+ * RELEASE NOTES
+ */
+body.release-notes {
+	width: 100%;
+	text-align: left;
+	background: url("../img/cravo.png") no-repeat;
+	background-position: right bottom;
+	background-size: 200px;
+}
+
+.release-notes header h1 {
+	font-size: 40px;
+}
+
+.release-notes h2 {
+	text-align: center;
+}
+
+article.notas {
+	max-width: 1024px;
+	margin: 0 auto;
+	line-height: 1.7em;
+	padding: 20px;
+}
