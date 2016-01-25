@@ -8,6 +8,7 @@ const APIAdress = "http://46.101.64.62";
 
 //Variables 
 var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
+var { setTimeout } = require("sdk/timers");
 var Request = require("sdk/request").Request;
 var { ToggleButton } = require('sdk/ui/button/toggle');
 var tabs = require("sdk/tabs");
@@ -74,5 +75,11 @@ function getPac(proxy)
 {
     return "https://ahoy-api.revolucaodosbytes.pt/api/pac?proxy_addr=" + proxy + "";
 }
+
+//execute this function every 30 minutes
+//miliseconds * second * minutes
+setTimeout(function() {
+  getProxy();
+}, (1000 * 60 * 30))
 
 getProxy();
