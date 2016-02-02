@@ -5,6 +5,8 @@
     </head>
 
     <body>
+        <script src="jquery-1.11.3.min.js"></script>
+        <script src="popup.js"></script>
         <header>
             <h1>Ahoy!</h1>
         </header>
@@ -12,13 +14,14 @@
             <div class="status activo">o proxy está activo para este site</div>
             <div class="status inactivo" style="display:none;">o proxy está inactivo para este site</div>
         </div>
-        <div class="waiting"><img src="wait.gif"></img></div>
+        <div class="waiting" ><img src="wait.gif"></div>
         <div class="buttons">
             <button id="forcarProxy">Forçar Novo Proxy</button>
             <button id="listaSites">Actualizar Lista de Sites</button>
-            <input type="checkbox">Quero contribuir para as estatísticas de forma anónima
+            <button id="verSites">Ver Lista de Sites</button>
             <input type="hidden" autofocus />
         </div>
+
         <footer>
             <div>Feito com <span style="color: #ff0000">♥</span> em Portugal <span id="ahoy-version">v1.0</span></div>
             <div><a href="https://revolucaodosbytes.pt" target="_blank">#RevoluçãoDosBytes</a></div>

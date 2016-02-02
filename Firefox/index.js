@@ -14,9 +14,13 @@ var { ToggleButton } = require('sdk/ui/button/toggle');
 var tabs = require("sdk/tabs");
 var panels = require("sdk/panel");
 var prefsvc = require("sdk/preferences/service");
+var version = require("sdk/self").version;
 var proxyAddress = "";
+var auxJSON = {};
 
 var panel = panels.Panel({
+    width: 305,
+    height: 327,
     contentURL: data.url("views/popup.html"),
     contentScriptFile: data.url("views/popup.js"),
     onHide: handleHide
@@ -27,6 +31,13 @@ panel.port.on("daNovoProxy", function(url) {
     console.log("vou buscar um proxy...");
     getProxy();
     console.log("toma...");
+});
+
+//Bring me the list!
+panel.port.on("openTabSites", function(url) {
+    console.log("Yes master");
+    openTabWithBlockedLinks();
+    console.log("Here");
 });
 
 var button = ToggleButton({
@@ -58,7 +69,9 @@ function setProxy(proxy)
 
     prefsvc.set("network.proxy.autoconfig_url", getPac(proxy));
     
-    panel.postMessage(proxy);
+    auxJSON.proxy = proxy
+    
+    panel.postMessage(auxJSON);
 }
 
 function getProxy()
@@ -76,10 +89,26 @@ function getPac(proxy)
     return "https://ahoy-api.revolucaodosbytes.pt/api/pac?proxy_addr=" + proxy + "";
 }
 
+function openTabWithBlockedLinks()
+{
+    tabs.open({
+        url: "https://sitesbloqueados.pt/?utm_source=ahoy&utm_medium=firefox&utm_campaign=Ahoy%20Firefox",
+        inBackground: true,
+        onOpen: function(tab) {
+            tab.activate();
+            panel.hide();
+        }
+    });
+}
+
 //execute this function every 30 minutes
 //miliseconds * second * minutes
 setTimeout(function() {
   getProxy();
 }, (1000 * 60 * 30))
+
+auxJSON.version = version;
+
+panel.postMessage(auxJSON);
 
 getProxy();
