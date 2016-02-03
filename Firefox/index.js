@@ -17,6 +17,7 @@ var prefsvc = require("sdk/preferences/service");
 var version = require("sdk/self").version;
 var proxyAddress = "";
 var auxJSON = {};
+var blockedSites = [];
 
 var panel = panels.Panel({
     width: 305,
@@ -101,6 +102,18 @@ function openTabWithBlockedLinks()
     });
 }
 
+function getBlockedSitesList()
+{
+    Request({
+        url: APIAdress+"/api/sites",
+        onComplete: function (response) {
+            for each (var item in response.json) {
+                blockedSites.push(item);
+            }
+        }
+    }).get();
+}
+
 //execute this function every 30 minutes
 //miliseconds * second * minutes
 setTimeout(function() {
@@ -112,3 +125,6 @@ auxJSON.version = version;
 panel.postMessage(auxJSON);
 
 getProxy();
+
+getBlockedSitesList();
+
