@@ -114,10 +114,27 @@ function getBlockedSitesList()
     }).get();
 }
 
+function logURL(tab)
+{
+    //check if the website we're trying to visit already exists on the blocked website list
+    //we ONLY send statistics to our servers if the website that's beeing visited is on the list of blocked sites
+    var cleanURL = tab.url.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\//g,"");
+    if (blockedSites.indexOf(cleanURL) > -1)
+    {
+        Request({
+            url: APIAdress+"/api/stats/host/"+cleanURL,
+            onComplete: function (response) {
+                console.log("Stats sent :)");
+            }
+        }).get();
+    }
+}
+
 //execute this function every 30 minutes
 //miliseconds * second * minutes
 setTimeout(function() {
-  getProxy();
+    getProxy();
+    getBlockedSitesList();
 }, (1000 * 60 * 30))
 
 auxJSON.version = version;
@@ -128,3 +145,4 @@ getProxy();
 
 getBlockedSitesList();
 
+tabs.on("ready", logURL);
