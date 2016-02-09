@@ -132,10 +132,13 @@ function logURL(tab)
 
 //execute this function every 30 minutes
 //miliseconds * second * minutes
-setTimeout(function() {
+setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
+function updateAhoy() {
     getProxy();
     getBlockedSitesList();
-}, (1000 * 60 * 30))
+    
+    setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
+}
 
 auxJSON.version = version;
 
@@ -146,3 +149,4 @@ getProxy();
 getBlockedSitesList();
 
 tabs.on("ready", logURL);
+
