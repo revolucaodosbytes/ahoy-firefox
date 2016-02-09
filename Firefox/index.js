@@ -30,7 +30,10 @@ var panel = panels.Panel({
 //Huuum, alguém me pediu um proxy...
 panel.port.on("daNovoProxy", function(url) {
     console.log("vou buscar um proxy...");
+
     getProxy();
+    getBlockedSitesList();
+
     console.log("toma...");
 });
 
@@ -40,6 +43,13 @@ panel.port.on("openTabSites", function(url) {
     openTabWithBlockedLinks();
     console.log("Here");
 });
+
+panel.on('show', function() {
+
+    console.log(tabs.activeTab.url)
+    panel.port.emit('currentURL', tabs.activeTab.url, blockedSites);
+
+})
 
 var button = ToggleButton({
     id: "ahoy-status",
@@ -88,7 +98,7 @@ function getProxy()
 
 function getPac(proxy)
 {
-    return "https://ahoy-api.revolucaodosbytes.pt/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
+    return APIAdress + "/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
 }
 
 function openTabWithBlockedLinks()
@@ -111,7 +121,8 @@ function getBlockedSitesList()
             for each (var item in response.json) {
                 blockedSites.push(item);
             }
-        }
+            console.log("feito");
+        }.bind(blockedSites)
     }).get();
 }
 
