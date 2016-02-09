@@ -67,7 +67,7 @@ function handleHide() {
 function setProxy(proxy)
 {
     prefsvc.set("network.proxy.type", 2);
-
+    console.log("Using PAC " + getPac(proxy) );
     prefsvc.set("network.proxy.autoconfig_url", getPac(proxy));
     
     auxJSON.proxy = proxy
@@ -80,6 +80,7 @@ function getProxy()
     Request({
         url: APIAdress+"/api/getProxy",
         onComplete: function (response) {
+            console.log("Got a proxy: " + response.json["host"]);
             setProxy(response.json["host"]+":"+response.json["port"]);
         }
     }).get();
@@ -87,7 +88,7 @@ function getProxy()
 
 function getPac(proxy)
 {
-    return "https://ahoy-api.revolucaodosbytes.pt/api/pac?proxy_addr=" + proxy + "";
+    return "https://ahoy-api.revolucaodosbytes.pt/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
 }
 
 function openTabWithBlockedLinks()

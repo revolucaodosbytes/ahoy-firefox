@@ -1,7 +1,7 @@
 window.addEventListener('click', function(event) {
     var target = event.target;
     
-    if (target.id == 'forcarProxy')
+    if (target.id == 'forcarProxy' || target.id == 'listaSites')
     {
         self.port.emit('daNovoProxy', target.toString());
     }
