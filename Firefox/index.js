@@ -8,6 +8,7 @@ const APIAdress = "http://46.101.64.62";
 
 //Variables 
 var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
+var pps = Cc["@mozilla.org/network/protocol-proxy-service;1"].getService(Ci.nsIProtocolProxyService);
 var { setTimeout } = require("sdk/timers");
 var Request = require("sdk/request").Request;
 var { ToggleButton } = require('sdk/ui/button/toggle');
@@ -74,14 +75,14 @@ function handleHide() {
     button.state('window', {checked: false});
 }
 
-function setProxy(proxy)
+/*function setProxy(proxy)
 {
     prefsvc.set("network.proxy.type", 2);
     console.log("Using PAC " + getPac(proxy) );
     prefsvc.set("network.proxy.autoconfig_url", getPac(proxy));
-    
+
     auxJSON.proxy = proxy
-    
+
     panel.postMessage(auxJSON);
 }
 
@@ -99,7 +100,7 @@ function getProxy()
 function getPac(proxy)
 {
     return APIAdress + "/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
-}
+}*/
 
 function openTabWithBlockedLinks()
 {
@@ -145,10 +146,10 @@ function logURL(tab)
 //execute this function every 30 minutes
 //miliseconds * second * minutes
 setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
+
 function updateAhoy() {
-    getProxy();
     getBlockedSitesList();
-    
+
     setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
 }
 
@@ -156,9 +157,27 @@ auxJSON.version = version;
 
 panel.postMessage(auxJSON);
 
-getProxy();
+//getProxy();
 
 getBlockedSitesList();
 
 tabs.on("ready", logURL);
+
+// Create the proxy info object in advance to avoid creating one every time
+var ahoyProxy = pps.newProxyInfo("http", "PROXY1.AHOY.PRO", 3128, 0, -1, null);
+
+var filter = {
+    applyFilter: function(pps, uri, proxy)
+    {
+        if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
+        {
+            return ahoyProxy;
+        }
+        else
+        {
+            return proxy;
+        }
+    }
+};
+pps.registerFilter(filter, 1000);
 
