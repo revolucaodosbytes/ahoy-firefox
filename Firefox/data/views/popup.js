@@ -1,5 +1,3 @@
-
-
 window.addEventListener('click', function(event) {
     var target = event.target;
     
@@ -15,9 +13,9 @@ window.addEventListener('click', function(event) {
 }, false);
 
 self.on('message', function(data){
-    if(data.hasOwnProperty('proxy'))
+    if(data.hasOwnProperty('host') && data.hasOwnProperty('port'))
     {
-       document.getElementById("proxyaddr").innerHTML = data.proxy;
+       document.getElementById("proxyaddr").innerHTML = data.host + ':' + data.port;
     }
     if(data.hasOwnProperty('version'))
     {
@@ -31,11 +29,11 @@ self.port.on('currentURL', function( currentURL, blockedSites ) {
 
     if (blockedSites.indexOf(cleanURL) > -1)
     {
-       document.getElementById('status-inactivo').style="display: none;";
-       document.getElementById('status-activo').style="";
+       document.getElementById('status-inactivo').style = "display: none;";
+       document.getElementById('status-activo').style = "";
     } else 
     {
-       document.getElementById('status-inactivo').style="";
+       document.getElementById('status-inactivo').style = "";
        document.getElementById('status-activo').style="display: none;";    
    }
 } );

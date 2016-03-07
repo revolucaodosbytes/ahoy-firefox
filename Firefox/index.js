@@ -46,8 +46,6 @@ panel.port.on("openTabSites", function(url) {
 });
 
 panel.on('show', function() {
-
-    console.log(tabs.activeTab.url)
     panel.port.emit('currentURL', tabs.activeTab.url, blockedSites);
 
 })
@@ -86,21 +84,25 @@ function handleHide() {
     panel.postMessage(auxJSON);
 }
 
+function getPac(proxy)
+{
+    return APIAdress + "/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
+}*/
+
+
+
 function getProxy()
 {
     Request({
         url: APIAdress+"/api/getProxy",
         onComplete: function (response) {
             console.log("Got a proxy: " + response.json["host"]);
-            setProxy(response.json["host"]+":"+response.json["port"]);
+            //setProxy(response.json["host"]+":"+response.json["port"]);
+            auxJSON.host = response.json["host"];
+            auxJSON.port = response.json["port"];
         }
     }).get();
 }
-
-function getPac(proxy)
-{
-    return APIAdress + "/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
-}*/
 
 function openTabWithBlockedLinks()
 {
@@ -120,7 +122,7 @@ function getBlockedSitesList()
         url: APIAdress+"/api/sites",
         onComplete: function (response) {
             for (var item in response.json) {
-                blockedSites.push(item);
+                blockedSites.push(response.json[item]);
             }
             console.log("feito");
         }.bind(blockedSites)
@@ -143,6 +145,37 @@ function logURL(tab)
     }
 }
 
+function setAhoyFilter()
+{
+    // Create the proxy info object in advance to avoid creating one every time
+    var ahoyProxy = pps.newProxyInfo("http", auxJSON.host, auxJSON.port, 0, -1, null);
+
+    var filter = {
+        applyFilter: function(pps, uri, proxy)
+        {
+            console.log(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,""));
+            if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
+            {
+                console.log("This is a blocked site...");
+                return ahoyProxy;
+            }
+            else
+            {
+                console.log("This is not a blocked site...");
+                return proxy;
+            }
+        }
+    };
+    pps.registerFilter(filter, 1000);
+
+    panel.postMessage(auxJSON);
+}
+
+function setIcon()
+{
+    panel.port.emit('greyIcon', tabs.activeTab.url);
+}
+
 //execute this function every 30 minutes
 //miliseconds * second * minutes
 setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
@@ -153,31 +186,21 @@ function updateAhoy() {
     setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
 }
 
+(function waitForProxy() {
+    if ( auxJSON.host && auxJSON.port ) {
+        setAhoyFilter();
+    } else {
+        setTimeout( waitForProxy, 500 );
+    }
+})();
+
 auxJSON.version = version;
-
-panel.postMessage(auxJSON);
-
-//getProxy();
 
 getBlockedSitesList();
 
+getProxy();
+
 tabs.on("ready", logURL);
+tabs.on("read", setIcon);
 
-// Create the proxy info object in advance to avoid creating one every time
-var ahoyProxy = pps.newProxyInfo("http", "PROXY1.AHOY.PRO", 3128, 0, -1, null);
-
-var filter = {
-    applyFilter: function(pps, uri, proxy)
-    {
-        if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
-        {
-            return ahoyProxy;
-        }
-        else
-        {
-            return proxy;
-        }
-    }
-};
-pps.registerFilter(filter, 1000);
-
+panel.postMessage(auxJSON);
