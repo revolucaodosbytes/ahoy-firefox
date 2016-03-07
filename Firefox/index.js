@@ -119,7 +119,7 @@ function getBlockedSitesList()
     Request({
         url: APIAdress+"/api/sites",
         onComplete: function (response) {
-            for each (var item in response.json) {
+            for (var item in response.json) {
                 blockedSites.push(item);
             }
             console.log("feito");
