@@ -30,19 +30,13 @@ var panel = panels.Panel({
 
 //Huuum, alguém me pediu um proxy...
 panel.port.on("daNovoProxy", function(url) {
-    console.log("vou buscar um proxy...");
-
     getProxy();
     getBlockedSitesList();
-
-    console.log("toma...");
 });
 
 //Bring me the list!
 panel.port.on("openTabSites", function(url) {
-    console.log("Yes master");
     openTabWithBlockedLinks();
-    console.log("Here");
 });
 
 panel.on('show', function() {
@@ -73,31 +67,11 @@ function handleHide() {
     button.state('window', {checked: false});
 }
 
-/*function setProxy(proxy)
-{
-    prefsvc.set("network.proxy.type", 2);
-    console.log("Using PAC " + getPac(proxy) );
-    prefsvc.set("network.proxy.autoconfig_url", getPac(proxy));
-
-    auxJSON.proxy = proxy
-
-    panel.postMessage(auxJSON);
-}
-
-function getPac(proxy)
-{
-    return APIAdress + "/api/pac?proxy_addr=" + proxy + "&ignore_cache=" + Date.now();
-}*/
-
-
-
 function getProxy()
 {
     Request({
         url: APIAdress+"/api/getProxy",
         onComplete: function (response) {
-            console.log("Got a proxy: " + response.json["host"]);
-            //setProxy(response.json["host"]+":"+response.json["port"]);
             auxJSON.host = response.json["host"];
             auxJSON.port = response.json["port"];
         }
@@ -121,10 +95,9 @@ function getBlockedSitesList()
     Request({
         url: APIAdress+"/api/sites",
         onComplete: function (response) {
-            for (var item in response.json) {
-                blockedSites.push(response.json[item]);
-            }
-            console.log("feito");
+            Object.keys(response.json).map(function(value, index) {
+                blockedSites.push(response.json[index]);
+            });
         }.bind(blockedSites)
     }).get();
 }
@@ -137,10 +110,7 @@ function logURL(tab)
     if (blockedSites.indexOf(cleanURL) > -1)
     {
         Request({
-            url: APIAdress+"/api/stats/host/"+cleanURL,
-            onComplete: function (response) {
-                console.log("Stats sent :)");
-            }
+            url: APIAdress+"/api/stats/host/"+cleanURL
         }).get();
     }
 }
@@ -153,15 +123,12 @@ function setAhoyFilter()
     var filter = {
         applyFilter: function(pps, uri, proxy)
         {
-            console.log(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,""));
             if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
             {
-                console.log("This is a blocked site...");
                 return ahoyProxy;
             }
             else
             {
-                console.log("This is not a blocked site...");
                 return proxy;
             }
         }

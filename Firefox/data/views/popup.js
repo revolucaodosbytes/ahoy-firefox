@@ -15,11 +15,11 @@ window.addEventListener('click', function(event) {
 self.on('message', function(data){
     if(data.hasOwnProperty('host') && data.hasOwnProperty('port'))
     {
-       document.getElementById("proxyaddr").innerHTML = data.host + ':' + data.port;
+       document.getElementById("proxyaddr").innerHTML = encodeURI(data.host) + ':' + encodeURI(data.port);
     }
     if(data.hasOwnProperty('version'))
     {
-        document.getElementById("ahoy-version").innerHTML = data.version;
+        document.getElementById("ahoy-version").innerHTML = encodeURI(data.version);
     }
 })
 
