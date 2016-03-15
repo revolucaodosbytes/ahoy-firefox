@@ -24,13 +24,11 @@ var panel = panels.Panel({
     onHide: handleHide
 });
 
-//Huuum, alguém me pediu um proxy...
 panel.port.on("daNovoProxy", function(url) {
     getProxy();
     getBlockedSitesList();
 });
 
-//Bring me the list!
 panel.port.on("openTabSites", function(url) {
     openTabWithBlockedLinks();
 });
@@ -92,7 +90,6 @@ function getBlockedSitesList()
         onComplete: function (response) {
             blockedSites = {}; 
             for (var item in response.json) { 
-                //blockedSites.push(response.json[index]);
                 blockedSites[response.json[item]] = true; 
             };
         }.bind(blockedSites)
