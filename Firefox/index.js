@@ -1,9 +1,6 @@
 //Constants
 const {Cc, Ci, Cu} = require("chrome");
-const { pathFor } = require('sdk/system');
 const { data } = require('sdk/self');
-const path = require('sdk/fs/path');
-const file = require('sdk/io/file');
 const APIAdress = "http://46.101.64.62";
 
 //Variables 
@@ -14,11 +11,10 @@ var Request = require("sdk/request").Request;
 var { ToggleButton } = require('sdk/ui/button/toggle');
 var tabs = require("sdk/tabs");
 var panels = require("sdk/panel");
-var prefsvc = require("sdk/preferences/service");
 var version = require("sdk/self").version;
 var proxyAddress = "";
 var auxJSON = {};
-var blockedSites = [];
+var blockedSites = new Set(); 
 
 var panel = panels.Panel({
     width: 305,
@@ -41,8 +37,7 @@ panel.port.on("openTabSites", function(url) {
 
 panel.on('show', function() {
     panel.port.emit('currentURL', tabs.activeTab.url, blockedSites);
-
-})
+});
 
 var button = ToggleButton({
     id: "ahoy-status",
@@ -95,9 +90,11 @@ function getBlockedSitesList()
     Request({
         url: APIAdress+"/api/sites",
         onComplete: function (response) {
-            Object.keys(response.json).map(function(value, index) {
-                blockedSites.push(response.json[index]);
-            });
+            blockedSites = {}; 
+            for (var item in response.json) { 
+                //blockedSites.push(response.json[index]);
+                blockedSites[response.json[item]] = true; 
+            };
         }.bind(blockedSites)
     }).get();
 }
@@ -107,7 +104,8 @@ function logURL(tab)
     //check if the website we're trying to visit already exists on the blocked website list
     //we ONLY send statistics to our servers if the website that's beeing visited is on the list of blocked sites
     var cleanURL = tab.url.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\//g,"");
-    if (blockedSites.indexOf(cleanURL) > -1)
+    //if (blockedSites.indexOf(cleanURL) > -1)
+    if (blockedSites.has(cleanURL))
     {
         Request({
             url: APIAdress+"/api/stats/host/"+cleanURL
@@ -123,14 +121,16 @@ function setAhoyFilter()
     var filter = {
         applyFilter: function(pps, uri, proxy)
         {
-            if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
+            /*if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
             {
                 return ahoyProxy;
             }
             else
             {
                 return proxy;
-            }
+            }*/
+            var spec = uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,""); 
+            return spec in blockedSites ? ahoyProxy : proxy; 
         }
     };
     pps.registerFilter(filter, 1000);

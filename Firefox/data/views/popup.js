@@ -23,11 +23,11 @@ self.on('message', function(data){
     }
 })
 
-self.port.on('currentURL', function( currentURL, blockedSites ) {
-
+self.port.on('currentURL', function( currentURL, blockedSites ) {  
     var cleanURL = currentURL.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\//g,"");
 
-    if (blockedSites.indexOf(cleanURL) > -1)
+    //if (blockedSites.indexOf(cleanURL) > -1)
+    if (cleanURL in blockedSites)
     {
        document.getElementById('status-inactivo').style = "display: none;";
        document.getElementById('status-activo').style = "";
@@ -36,4 +36,4 @@ self.port.on('currentURL', function( currentURL, blockedSites ) {
        document.getElementById('status-inactivo').style = "";
        document.getElementById('status-activo').style="display: none;";    
    }
-} );
+});
