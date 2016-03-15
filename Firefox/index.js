@@ -14,7 +14,7 @@ var panels = require("sdk/panel");
 var version = require("sdk/self").version;
 var proxyAddress = "";
 var auxJSON = {};
-var blockedSites = new Set(); 
+var blockedSites = {}; 
 
 var panel = panels.Panel({
     width: 305,
@@ -104,8 +104,8 @@ function logURL(tab)
     //check if the website we're trying to visit already exists on the blocked website list
     //we ONLY send statistics to our servers if the website that's beeing visited is on the list of blocked sites
     var cleanURL = tab.url.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\//g,"");
-    //if (blockedSites.indexOf(cleanURL) > -1)
-    if (blockedSites.has(cleanURL))
+    
+    if (cleanURL in blockedSites)
     {
         Request({
             url: APIAdress+"/api/stats/host/"+cleanURL
@@ -121,14 +121,6 @@ function setAhoyFilter()
     var filter = {
         applyFilter: function(pps, uri, proxy)
         {
-            /*if (blockedSites.indexOf(uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,"")) > -1)
-            {
-                return ahoyProxy;
-            }
-            else
-            {
-                return proxy;
-            }*/
             var spec = uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,""); 
             return spec in blockedSites ? ahoyProxy : proxy; 
         }
@@ -168,6 +160,6 @@ getBlockedSitesList();
 getProxy();
 
 tabs.on("ready", logURL);
-tabs.on("read", setIcon);
+tabs.on("ready", setIcon);
 
 panel.postMessage(auxJSON);
