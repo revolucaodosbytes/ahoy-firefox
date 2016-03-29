@@ -1,7 +1,7 @@
 {
     "title": "Ahoy!",
     "name": "ahoy",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "description": "Acede a todos os sites bloqueados em Portugal. Uma experiencia de internet livre e sem qualquer tipo de bloqueios.",
     "main": "index.js",
     "author": "Revolução dos Bytes",

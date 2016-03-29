@@ -10,16 +10,25 @@ window.addEventListener('click', function(event) {
     {
         self.port.emit('openTabSites', target.toString());
     }
+    
+    if (target.id == 'mensagem')
+    {
+        self.port.emit('openTabLink', target.toString());
+    }
 }, false);
 
 self.on('message', function(data){
     if(data.hasOwnProperty('host') && data.hasOwnProperty('port'))
     {
-       document.getElementById("proxyaddr").innerHTML = encodeURI(data.host) + ':' + encodeURI(data.port);
+       document.getElementById("proxyaddr").innerHTML = data.host + ':' + data.port;
     }
     if(data.hasOwnProperty('version'))
     {
-        document.getElementById("ahoy-version").innerHTML = encodeURI(data.version);
+        document.getElementById("ahoy-version").innerHTML = data.version;
+    }
+    if(data.hasOwnProperty('messageText'))
+    {
+        document.getElementById("mensagem").innerHTML = data.messageText;
     }
 })
 

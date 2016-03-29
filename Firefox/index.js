@@ -17,8 +17,8 @@ var auxJSON = {};
 var blockedSites = {}; 
 
 var panel = panels.Panel({
-    width: 305,
-    height: 327,
+    width: 310,
+    height: 375,
     contentURL: data.url("views/popup.html"),
     contentScriptFile: data.url("views/popup.js"),
     onHide: handleHide
@@ -31,6 +31,10 @@ panel.port.on("daNovoProxy", function(url) {
 
 panel.port.on("openTabSites", function(url) {
     openTabWithBlockedLinks();
+});
+
+panel.port.on("openTabLink", function(url) {
+    openTabWithLink(auxJSON.messageURL);
 });
 
 panel.on('show', function() {
@@ -75,6 +79,18 @@ function openTabWithBlockedLinks()
 {
     tabs.open({
         url: "https://sitesbloqueados.pt/?utm_source=ahoy&utm_medium=firefox&utm_campaign=Ahoy%20Firefox",
+        inBackground: true,
+        onOpen: function(tab) {
+            tab.activate();
+            panel.hide();
+        }
+    });
+}
+
+function openTabWithLink(url)
+{
+    tabs.open({
+        url: url,
         inBackground: true,
         onOpen: function(tab) {
             tab.activate();
@@ -132,6 +148,17 @@ function setIcon()
     panel.port.emit('greyIcon', tabs.activeTab.url);
 }
 
+function getBannerMessage()
+{
+    Request({
+        url: APIAdress+"/api/banner",
+        onComplete: function (response) {
+            auxJSON.messageText = response.json["text"].replace(/<(?:.|\n)*?>/gm, '');
+            auxJSON.messageURL = response.json["url"].replace(/<(?:.|\n)*?>/gm, '');
+        }
+    }).get();
+}
+
 //execute this function every 30 minutes
 //miliseconds * second * minutes
 setTimeout(function() { updateAhoy(); }, (1000 * 60 * 30));
@@ -150,11 +177,21 @@ function updateAhoy() {
     }
 })();
 
+(function waitForMessage() {
+    if ( auxJSON.messageText && auxJSON.messageURL ) {
+        panel.postMessage(auxJSON);
+    } else {
+        setTimeout( waitForMessage, 500 );
+    }
+})();
+
 auxJSON.version = version;
 
 getBlockedSitesList();
 
 getProxy();
+
+getBannerMessage();
 
 tabs.on("ready", logURL);
 tabs.on("ready", setIcon);
