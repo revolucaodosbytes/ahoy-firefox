@@ -37,11 +37,11 @@ self.port.on('currentURL', function( currentURL, blockedSites ) {
 
     if (cleanURL in blockedSites)
     {
-       document.getElementById('status-inactivo').style = "display: none;";
-       document.getElementById('status-activo').style = "";
+       document.getElementById('status-inactivo').style.display = "none";
+       document.getElementById('status-activo').style.display = "";
     } else 
     {
-       document.getElementById('status-inactivo').style = "";
-       document.getElementById('status-activo').style="display: none;";    
+       document.getElementById('status-inactivo').style.display = "";
+       document.getElementById('status-activo').style.display = "none";    
    }
 });
