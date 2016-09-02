@@ -1,7 +1,7 @@
 //Constants
 const {Cc, Ci, Cu} = require("chrome");
 const { data } = require('sdk/self');
-const APIAdress = "http://46.101.64.62";
+const APIAdress = "http://ahoy-api.revolucaodosbytes.pt";
 
 //Variables 
 var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
