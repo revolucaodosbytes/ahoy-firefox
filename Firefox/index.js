@@ -27,19 +27,23 @@ var panel = panels.Panel({
 panel.port.on("daNovoProxy", function(url) {
     getProxy();
     getBlockedSitesList();
+    tabs.activeTab.reload()
+    panel.hide()
 });
 
 panel.port.on("openTabSites", function(url) {
     openTabWithBlockedLinks();
+    panel.hide()
 });
 
 panel.port.on("openTabLink", function(url) {
     openTabWithLink(auxJSON.messageURL);
+    panel.hide()
 });
 
 panel.on('show', function() {
     panel.port.emit('currentURL', tabs.activeTab.url, blockedSites);
-});
+}.bind(blockedSites));
 
 var button = ToggleButton({
     id: "ahoy-status",
@@ -51,6 +55,10 @@ var button = ToggleButton({
     },
     onChange: handleChange
 });
+
+function escape_regex(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
 
 function handleChange(state) {
     if (state.checked) {
@@ -104,9 +112,9 @@ function getBlockedSitesList()
     Request({
         url: APIAdress+"/api/sites",
         onComplete: function (response) {
-            blockedSites = {}; 
+            blockedSites = []; 
             for (var item in response.json) { 
-                blockedSites[response.json[item]] = true; 
+                blockedSites.push( response.json[item] ); 
             };
         }.bind(blockedSites)
     }).get();
@@ -134,8 +142,15 @@ function setAhoyFilter()
     var filter = {
         applyFilter: function(pps, uri, proxy)
         {
-            var spec = uri.spec.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\/.+/g,"").replace(/\//g,""); 
-            return spec in blockedSites ? ahoyProxy : proxy; 
+            should_proxy = blockedSites.some( function(blocked_site) {
+                var regex = new RegExp("^http(s)?:\/\/(www\.)?" + blocked_site );
+                return regex.test(uri.spec);
+            });
+
+            if ( should_proxy )
+                return ahoyProxy;
+
+            return proxy;
         }
     };
     pps.registerFilter(filter, 1000);
@@ -146,17 +161,6 @@ function setAhoyFilter()
 function setIcon()
 {
     panel.port.emit('greyIcon', tabs.activeTab.url);
-}
-
-function getBannerMessage()
-{
-    Request({
-        url: APIAdress+"/api/banner",
-        onComplete: function (response) {
-            auxJSON.messageText = response.json["text"].replace(/<(?:.|\n)*?>/gm, '');
-            auxJSON.messageURL = response.json["url"].replace(/<(?:.|\n)*?>/gm, '');
-        }
-    }).get();
 }
 
 //execute this function every 30 minutes
@@ -191,7 +195,6 @@ getBlockedSitesList();
 
 getProxy();
 
-getBannerMessage();
 
 tabs.on("ready", logURL);
 tabs.on("ready", setIcon);

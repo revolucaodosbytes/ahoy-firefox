@@ -22,16 +22,12 @@ self.on('message', function(data){
     if(data.hasOwnProperty('version')) {
         document.getElementById("ahoy-version").innerHTML = data.version;
     }
-    
-    if(data.hasOwnProperty('messageText')) {
-        document.getElementById("mensagem").innerHTML = data.messageText;
-    }
 })
 
 self.port.on('currentURL', function( currentURL, blockedSites ) {  
     var cleanURL = currentURL.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\//g,"");
-
-    if (cleanURL in blockedSites) {
+    
+    if ( blockedSites.indexOf(cleanURL) != -1 ) {
        document.getElementById('status-inactivo').style.display = "none";
        document.getElementById('status-activo').style.display = "";
     } else {
