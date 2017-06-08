@@ -16,17 +16,17 @@ window.addEventListener('click', function(event) {
 
 self.on('message', function(data){
     if(data.hasOwnProperty('host') && data.hasOwnProperty('port')) {
-       document.getElementById("proxyaddr").innerHTML = data.host + ':' + data.port;
+       document.getElementById("proxyaddr").firstChild.nodeValue = data.host + ':' + data.port;
     }
     
     if(data.hasOwnProperty('version')) {
-        document.getElementById("ahoy-version").innerHTML = data.version;
+        document.getElementById("ahoy-version").firstChild.nodeValue = data.version;
     }
 })
 
 self.port.on('currentURL', function( currentURL, blockedSites ) {  
     var cleanURL = currentURL.replace(/.*?:\/\/www.|.*?:\/\//g,"").replace(/\//g,"");
-    
+
     if ( blockedSites.indexOf(cleanURL) != -1 ) {
        document.getElementById('status-inactivo').style.display = "none";
        document.getElementById('status-activo').style.display = "";
