@@ -16,11 +16,11 @@ window.addEventListener('click', function(event) {
 
 self.on('message', function(data){
     if(data.hasOwnProperty('host') && data.hasOwnProperty('port')) {
-       document.getElementById("proxyaddr").firstChild.nodeValue = data.host + ':' + data.port;
+       document.getElementById("proxyaddr").textContent = data.host + ':' + data.port;
     }
     
     if(data.hasOwnProperty('version')) {
-        document.getElementById("ahoy-version").firstChild.nodeValue = data.version;
+        document.getElementById("ahoy-version").textContent = data.version;
     }
 })
 
