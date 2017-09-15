@@ -18,7 +18,7 @@ header {
 
 header h1 {
 	margin: 0;
-	padding 0;
+	padding: 0;
 }
 
 h1 {
@@ -201,8 +201,6 @@ article.notas {
 	background-origin: padding-box ;
 	background-position-x: 0% ;
 	background-position-y: 0% ;
-	background-repeat-x: ;
-	background-repeat-y: ;
 	background-size: auto ;
 	border-bottom-left-radius: 3px ;
 	border-bottom-right-radius: 3px ;
@@ -213,7 +211,7 @@ article.notas {
 	cursor: auto ;
 	display: inline-block ;
 	font-family: "Source Sans Pro", sans-serif ;
-	font-size: 18px ;
+	font-size: 16px ;
 	font-weight: bold ;
 	height: 63px ;
 	line-height: 63px ;
@@ -227,7 +225,6 @@ article.notas {
 	padding-top: 0px ;
 	text-align: center ;
 	text-decoration: none ;
-	text-size-adjust: 100% ;
 	text-transform: uppercase ;
 	transition-delay: 0s ;
 	transition-duration: 0.3s ;
