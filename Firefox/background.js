@@ -34,18 +34,13 @@ var ahoy = new Ahoy();
  */
 
 // Create the periodic alarm to fetch new sites
-browser.alarms.create( "update_sites_and_proxy", { delayInMinutes: 30, periodInMinutes: 30 } )
+//browser.alarms.create( "update_sites_and_proxy", { delayInMinutes: 30, periodInMinutes: 30 } );
 
 // Handle the alarms
 
-browser.alarms.onAlarm.addListener( function (alarm) {
+/*browser.alarms.onAlarm.addListener( function (alarm) {
 	if( alarm.name == "update_sites_and_proxy" ) {
 		ahoy.update_site_list();
 		ahoy.update_proxy();
 	}
-});
-
-
-function getPopup() {
-    return browser.extension.getViews( { type: "popup" } )[0];
-}
+});*/
