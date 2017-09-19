@@ -318,19 +318,11 @@ Ahoy.prototype.setup_callback_filters = function() {
 };
 
 Ahoy.prototype.is_url_in_list = function( url ) {
-	var parser = document.createElement("a");
-	// Get the hostname without www
-	var hostname = parser.hostname.replace("www.","");
+	var hostname = url.replace("www.","").replace(/(http(s?))\:\/\//g,"").replace("/","");
 
-	parser.href = url;
-
-	for( var site_id in this.sites_list ) {
-	    var site = this.sites_list[ site_id ];
-
-	    if ( hostname == site ) {
-	        return true;
-	    } 
+    if (this.sites_list.indexOf(hostname) != -1) {
+		return true;
 	}
-
-	return false;
+	
+    return false;
 }

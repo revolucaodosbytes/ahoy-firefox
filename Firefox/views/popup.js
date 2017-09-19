@@ -20,8 +20,6 @@ $(document).ready( function() {
         
         var activo = browser.extension.getBackgroundPage().ahoy.is_url_in_list(currentTab.url);
 
-        console.log(activo);
-
         if( activo ) {
             $(".status.activo").show();
             $(".status.inactivo").hide();
