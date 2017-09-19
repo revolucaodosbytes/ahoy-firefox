@@ -13,9 +13,12 @@ browser.runtime.onMessage.addListener((message) => {
 // required PAC function that will be called to determine
 // if a proxy should be used.
 function FindProxyForURL(url, host) {
-    if (blockedHosts.indexOf(host) != -1) {
-        browser.runtime.sendMessage(`Proxy-blocker: blocked ${url}`);
+    var hostname = host.replace("www.","").replace(/(http(s?))\:\/\//g,"").replace("/","");
+    
+    if (blockedHosts.indexOf(hostname) != -1) {
+        browser.runtime.sendMessage(`Proxy-blocker: blocked ${hostname}`);
         return proxyAddress;
     }
+
     return "DIRECT";
 }
