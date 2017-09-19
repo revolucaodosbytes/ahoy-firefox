@@ -54,7 +54,7 @@ function getPopup() {
 
 // Default settings. If there is nothing in storage, use these values.
 const defaultSettings = {
-  sites_list: ["www.omeuip.com"],
+  sites_list: ["thepiratebay.org"],
   proxy_addr: "proxy1.ahoy.pro:3127"
 }
 
@@ -70,7 +70,6 @@ browser.proxy.onProxyError.addListener(error => {
 function handleInit() {
   // update the proxy whenever stored settings change
   browser.storage.onChanged.addListener((newSettings) => {
-    console.log(newSettings);
     browser.runtime.sendMessage(newSettings.sites_list.newValue, newSettings.proxy_addr.newValue, {toProxyScript: true});
   });
 
