@@ -8,6 +8,11 @@
         "48": "icons/color/48x48.png",
         "128": "icons/color/128x128.png"
     },
+    "applications": {
+        "gecko": {
+            "strict_min_version": "56.0a1"
+        }
+    },
     "background": { 
         "scripts": [
             "ahoy.js",
