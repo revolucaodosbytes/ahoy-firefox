@@ -5,6 +5,8 @@
 [![Mozilla Add-on](https://img.shields.io/amo/rating/ahoy.svg?maxAge=2592000)](https://addons.mozilla.org/pt-PT/firefox/addon/ahoy/)
 [![Mozilla Add-on](https://img.shields.io/amo/users/ahoy.svg?maxAge=2592000)](https://addons.mozilla.org/pt-PT/firefox/addon/ahoy/)
 
+Descarrega o Ahoy! em https://download.ahoy.pro/
+
 Acede a todos os sites bloqueados em Portugal. Uma experiencia de internet livre e sem qualquer tipo de bloqueios.
 
 Basta de limites e bloqueios! A internet é de todos e para todos, basta de termos alguém a dizer o que podemos ou não visitar!
@@ -23,8 +25,7 @@ Chega de bloqueios! Queremos uma internet aberta.
 
 ### Installation
 
-- Google Chrome - https://chrome.google.com/webstore/detail/ahoy/ljighgeflmhnpljodhpcifcojkpancpm
-- Firefox - https://addons.mozilla.org/en-US/firefox/addon/ahoy/
+- https://download.ahoy.pro/
 
 ### Desenvolvimento
 
