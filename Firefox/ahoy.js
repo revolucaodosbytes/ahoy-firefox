@@ -130,10 +130,6 @@ Ahoy.prototype.init_callbacks = function() {
 		{ urls: ['<all_urls>'] }
 	);
 
-	// Stats
-	browser.webNavigation.onCompleted.addListener(this.send_hostname.bind(this), {
-		url: this.webnav_filter_list
-	});
 };
 
 Ahoy.prototype.update_callbacks = function() {
@@ -145,11 +141,6 @@ Ahoy.prototype.update_callbacks = function() {
 	);
 	browser.webRequest.onResponseStarted.removeListener(
 		this.check_for_blocked_site.bind(this)
-	);
-
-	// Stats
-	browser.webNavigation.onCompleted.removeListener(
-		this.send_hostname.bind(this)
 	);
 
 	// Recreate new callbacks
@@ -208,27 +199,6 @@ Ahoy.prototype.after_update = function(details) {
 			active: true
 		});
 	}
-};
-
-/**
- * Stats functions
- */
-Ahoy.prototype.send_hostname = function(details) {
-	var parser = document.createElement('a');
-	var hostname = parser.hostname.replace('www.', '');
-	var xhr = new XMLHttpRequest();
-
-	parser.href = details.url;
-
-	xhr.open('GET', this.api_url + '/api/stats/host/' + hostname);
-
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			console.log('Stats sent.');
-		}
-	};
-
-	xhr.send();
 };
 
 Ahoy.prototype.init_events = function() {
