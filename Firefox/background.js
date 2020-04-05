@@ -1,5 +1,5 @@
 // Initialize the ahoy
-const ahoy = new Ahoy();
+var ahoy = new Ahoy();
 let blockedHosts = [];
 let proxyAddress = '';
 
