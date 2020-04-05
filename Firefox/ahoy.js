@@ -22,43 +22,12 @@ var Ahoy = function() {
 
 			if (result.proxy_addr !== undefined) this.proxy_addr = result.proxy_addr;
 
-			this.enable_proxy();
-
 			// Init
 			this.init_events();
 		}.bind(this)
 	);
 
 	browser.runtime.onInstalled.addListener(this.after_update.bind(this));
-};
-
-Ahoy.prototype.enable_proxy = function() {
-	// Mudar o proxy
-	var config = {
-		mode: 'pac_script',
-		pacScript: {
-			url: this.api_url + '/api/pac?proxy_addr=' + this.proxy_addr,
-			mandatory: false
-		}
-	};
-
-	// Describes the current proxy setting being used.
-	var proxySettings = {
-		value: config,
-		scope: 'regular'
-	};
-
-	// Setup new settings for the appropriate window.
-	console.log('Applying proxy settings for ' + this.proxy_addr);
-	//browser.proxy.settings.set(proxySettings);
-};
-
-/**
- * Retore PAC callback
- */
-Ahoy.prototype.disable_proxy = function() {
-	console.log('Reverting proxy settings');
-	browser.proxy.settings.clear({ scope: 'regular' });
 };
 
 Ahoy.prototype.update_site_list = function() {
@@ -223,11 +192,7 @@ Ahoy.prototype.event_proxy_updated = function(e) {
 	// Update the fields
 	this.proxy_addr = e.detail.proxy_addr;
 	browser.storage.local.set(
-		{ proxy_addr: e.detail.proxy_addr },
-		function() {
-			// Enable the proxy
-			this.enable_proxy();
-		}.bind(this)
+		{ proxy_addr: e.detail.proxy_addr }
 	);
 };
 
@@ -250,8 +215,6 @@ Ahoy.prototype.check_for_blocked_redirected_site = function(details) {
 };
 
 Ahoy.prototype.check_for_blocked_site = function(details) {
-	// HOTFIX: Fix potential problem with turned off proxy
-	this.enable_proxy();
 
 	// Array with the IP's that the Blocked Page warning usually have.
 	var warning_ips = [
